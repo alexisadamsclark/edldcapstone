@@ -1,0 +1,215 @@
+---
+title: "data_cleaning"
+output: html_document
+---
+
+```{r setup}
+#set global options
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+```
+
+```{r library}
+#load libraries
+
+library(tidyverse)
+library(rio)
+library(here)
+
+```
+
+```{r import}
+#import data
+
+setwd("~/Desktop/edld capstone/edldcapstone/data")
+data <- rio::import("covid19_ibdata.csv", setclass = "tbl_df") #for some reason here package wasn't working
+
+#Note: 1 row removed in the original csv dataset (before importing in to R) because it was the human subject coordinator (N = 346)
+
+#str(data)
+#View(data)
+```
+
+```{r id}
+#filter out those participants who spent less than 10 minutes taking the survey
+
+data <- data %>%
+  mutate(pid = row_number()) %>% 
+  filter(duration > 600)
+
+#eliminated 7 participants (N = 339)
+```
+
+```{r attention check}
+#filter out individuals who answered less than 4 of thr 5 attention check questions correctly
+
+data <- data %>% 
+  select(pid, att_1, att_2, att_3, att_4, att_5, everything())
+
+data_att <- data %>% 
+        dplyr::mutate(att_1 = recode(att_1, 
+                              `2`= 1,
+                               .default = 0),
+               att_2 = recode(att_2,
+                              `1`= 1,
+                               .default = 0),
+                att_3 = recode(att_3,
+                              `10`= 1,
+                               .default = 0),
+                att_4 = recode(att_4,
+                              `3`= 1,
+                               .default = 0),
+                att_5 = recode(att_5,
+                              `6`= 1,
+                               .default = 0)) %>% 
+        mutate(attention = att_1 + att_2 + att_3 + att_4 + att_5) %>% 
+        filter(attention >= 4) 
+
+#excluded 30 additional participants (N = 309)
+```
+
+```{r recode}
+
+data_recode <- data_att %>%
+    mutate_at(c("ies_1", "ies_2", "ies_3", "ies_4", "ies_5", "ies_6", "ies_7", "ies_8", "ies_9", "ies_10", 
+                "ies_11", "ies_12", "ies_13", "ies_14", "ies_15"), 
+            list(~recode(., 
+                        `1`= 0, 
+                        `2`= 1, 
+                        `3`= 2, 
+                        `4`= 3, 
+                        .missing = NA_real_))) %>% 
+  mutate_at(c("ibq_1", "ibq_2", "ibq_3", "ibq_4", "ibq_5", "ibq_6", "ibq_7", "ibq_8", "ibq_9", "ibq_10", 
+              "ibq_11", "ibq_12"), 
+            list(~recode(., 
+                        `0`= 0, 
+                        `1`= 1, 
+                        `2`= 0, 
+                        .missing = NA_real_)))  %>% 
+  mutate(gender = recode_factor(gender, 
+                        `2` = "Man", #ref
+                        `1` = "Woman",
+                        `3` = "Trans/Non-conforming/Non-binary",
+                        `4` = "Trans/Non-conforming/Non-binary",
+                        `5` = "Trans/Non-conforming/Non-binary",
+                        `6` = "Trans/Non-conforming/Non-binary",
+                        `7` = "Trans/Non-conforming/Non-binary",
+                        .default = "Trans/Non-conforming/Non-binary"),
+                        .missing = NA_character_,
+        raceethn = recode_factor(raceethn, 
+                        `7` = "White", #ref
+                        `1`= "American Indian/Alaskan Native",
+                        `2` = "Asian",
+                        `3` = "Black/African American",
+                        `4` = "Hispanic/Latino American",
+                        `5` = "Middle Eastern",
+                        `6` = "Native Hawaiian/Pacific Islander",
+                        `8` = "Not Listed",
+                        `9` = "Self-Described",
+                        .default = "multiracial/multiethnic"),
+                        .missing = NA_character_,
+        int = recode_factor(int, 
+                        `1` = "domestic student", #ref
+                        `0`= "international student",
+                         .missing = NA_character_), 
+        orient = recode_factor(orient,
+                        `4` = "Heterosexual", #ref
+                        `1` = "Asexual",
+                        `2` = "Bisexual",
+                        `3` = "Gay",
+                        `5` = "Lesbian",
+                        `6` = "Queer",
+                        `7` = "Not Listed/elf-Described",
+                        .default = "Multiple Identities",
+                        .missing = NA_character_), 
+        religion = recode_factor(religion,
+                        `4` = "Christianity", #ref
+                        `1`= "Agnosticism",
+                        `2` = "Atheism",
+                        `3` = "Buddhism",
+                        `5` = "Hinduism",
+                        `6` = "Islam",
+                        `7` = "Judaism",
+                        `8` = "Not Listed/self-described",
+                        .default = "Multiple Religions",
+                        .missing = NA_character_),
+        varsity = recode_factor(varsity, 
+                        `2` = "not a varsity athelete", #ref
+                        `1`= "varsity athlete",
+                        .missing = NA_character_), 
+        nonvarsity = recode_factor(nonvarsity, 
+                        `2` = "not a nonvarsity athelete", #ref
+                        `1`= "nonvarsity athlete",
+                        .missing = NA_character_), 
+        frat = recode_factor(frat, 
+                        `2` = "not fraternity member", #ref
+                        `1`= "fraternity member",
+                        .missing = NA_character_), 
+        soror = recode_factor(soror, 
+                        `2` = "not sorority member", #ref
+                        `1`= "sorority member",
+                        .missing = NA_character_), 
+        housing = recode_factor(housing, 
+                        `2` = "non campus housing", #ref
+                        `1`= "campus housing",
+                        .missing = NA_character_), 
+        inperson = recode_factor(inperson, 
+                        `2` = "no in person classes", #ref
+                        `1`= "in person classes",
+                        .missing = NA_character_), 
+        liveeug = recode_factor(liveeug, 
+                        `2` = "not living in eugene at all", #ref
+                        `1`= "living in eugene",
+                        `3` = "part time", 
+                        .missing = NA_character_), 
+        student = recode_factor(student, 
+                        `1`= "first year", #ref
+                        `2` = "second year",
+                        `3` = "third year", 
+                        `4` = "fourth year", 
+                        `5` = "other",
+                        .missing = NA_character_), 
+       covid19 = recode_factor(covid19, 
+                        `2` = "do not know someone with covid", #ref
+                        `1`= "know someone with covid",
+                        .missing = NA_character_))
+
+```
+
+```{r mising data}
+#let's look at what percent of the data is missing
+
+data_long <- data_recode %>% 
+  select(-duration, -attention) %>% 
+  gather(item, response, -1, -c(gender:covid19)) %>% 
+  separate(item, c("scale", "item"), sep = "_") %>% 
+  select(pid, scale, item, response, everything())
+
+sum(is.na(data_long$response)) / nrow(data_long) #1.5% ofdata missing, 358 missing data points out of 23484
+
+#impute or handle missing data here - maybe?
+```
+
+```{r sum}
+#create dataset with sum scores
+
+data_sum <- data_recode %>% 
+  dplyr::rowwise() %>% 
+  mutate(ies_mean = rowMeans(dplyr::across(ies_1:ies_15))) %>%
+  mutate(ibq_sum = rowSums(dplyr::across(ibq_1:ibq_12))) %>%
+  mutate(tsc_mean = rowMeans(dplyr::across(tsc_1:tsc_40))) %>%
+  ungroup()
+
+```
+
+```{r write datasets}
+
+ib_data <- data_sum %>% 
+  select(pid, starts_with("ibq"), starts_with("id"), starts_with("tsc"), starts_with("ies"), everything())
+
+ write_csv(ib_data, 
+        path = "~/Desktop/edld capstone/edldcapstone/data/ib_data_clean.csv")
+```
+
+
