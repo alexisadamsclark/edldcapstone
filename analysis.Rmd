@@ -1,0 +1,30 @@
+---
+title: "data analysis"
+output: html_document
+---
+
+```{r setup}
+#set global options
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+```
+
+```{r library}
+#load libraries
+
+library(tidyverse)
+library(rio)
+library(here)
+
+```
+
+```{r import}
+#import clean data
+
+setwd("~/Desktop/edld capstone/edldcapstone/data")
+data <- rio::import("ib_data_cean.csv", setclass = "tbl_df") #for some reason here package wasn't working
+
+#str(data)
+#View(data)
+```
