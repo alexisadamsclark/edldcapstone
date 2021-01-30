@@ -1,13 +1,15 @@
 ---
 title: "data analysis"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup}
 #set global options
 
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-
+options(scipen = 999)
 ```
 
 ```{r library}
@@ -16,15 +18,265 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 library(tidyverse)
 library(rio)
 library(here)
-
+library(psych)
+library(skimr)
+library(apaTables)
 ```
 
 ```{r import}
 #import clean data
 
 setwd("~/Desktop/edld capstone/edldcapstone/data")
-data <- rio::import("ib_data_cean.csv", setclass = "tbl_df") #for some reason here package wasn't working
+data <- rio::import("ib_data_clean.csv", setclass = "tbl_df") #for some reason here package wasn't working
 
 #str(data)
 #View(data)
+```
+
+```{r ib descriptives}
+
+#descriptives of sum/mean scores
+data_sum <- data %>% 
+  select(ibq_sum, tsc_mean, ies_mean)
+skim(data_sum)
+
+#descriptives of IB
+data %>% 
+  count(ibq_sum) #66.3% of students (205 reported at least one form of institutional betrayal)
+
+#histogram of IB counts
+data %>% 
+  ggplot(aes(x = ibq_sum)) + 
+  geom_histogram(fill = "#56B4E9", bins = 12, alpha = 0.7) + 
+  theme_light(25) + 
+  scale_x_continuous(name="\nInstitutional Betrayal Total Scores") 
+
+#IB by gender
+data %>% 
+  group_by(gender) %>% 
+  summarize(mean = mean(ibq_sum, na.rm = TRUE),
+            sd = sd(ibq_sum, na.rm = TRUE))
+
+
+```
+
+```{r ib visualizations}
+
+#horizontal
+#data %>% 
+#  select(starts_with("ibq"), -ibq_sum) %>% 
+#  gather(item, response) %>% 
+#  filter(!is.na(response)) %>% 
+#  group_by(item) %>% 
+#  count(response) %>% 
+#  filter(response == 1) %>%
+#  mutate(perc = round((n/309),2),
+#  perc2 = round((n/309)*100,1)) %>% 
+#  ggplot(aes(x = reorder(item, perc), y = perc, label = perc2)) + 
+#  geom_col(fill = "#56B4E9", alpha = 0.7) + 
+#  theme_light(15) + 
+#  ggtitle("\nPercentage of students endorsing each IBQ item (N = 309)") + 
+# scale_y_continuous(labels = scales::percent, limits = c(0,1)) + 
+#  theme(axis.text.x = element_text(angle = 0, vjust=0.5, size = 11)) +
+#  xlab("") +
+#  ylab("") +
+#  scale_x_discrete(labels=c("Created environment where \n transmission and safety violations \n seemed common or normal\n", "Created environment where \n transmission and safety violations \n seemed more likely to occur\n", "Created environment where \n continued membership was \n difficult\n", "Did not take proactive steps \n to prevent transmission \n or enact safety protocols\n", "Covered up instances \n of transmission or safety \n violations\n", "Created environment where \n you no longer felt like a valued \n member of the institution\n", "Responded inadequately to \n concerns about COVID-19 or \n reports of safety violations\n", "Made it difficult to \n share concerns or report \n a safety violation\n", "Mishandled a complaint \n or report related to \n COVID-19 safety protocols\n", "Suggested your experience \n might affect the reputation \n of the institution\n", "Denied your experience \n related to COVID-19 \n in some way\n", "Punished you in some way \n for expressing concerns  \n")) + 
+#  geom_text(hjust=0.6, vjust=-1, size = 5)
+
+#vertical
+ib_plot <- data %>% 
+  select(starts_with("ibq"), -ibq_sum) %>% 
+  gather(item, response) %>% 
+  filter(!is.na(response)) %>% 
+  group_by(item) %>% 
+  count(response) %>% 
+  filter(response == 1) %>%
+  mutate(perc = round((n/309),2),
+         perc2 = round((n/309)*100,1)) %>% 
+  ggplot(aes(x = reorder(item, perc), y = perc, label = perc2)) + 
+  geom_col(fill = "#56B4E9", width = 0.5) + 
+  theme_light(15) + 
+  ggtitle("\nPercentage of Students Endorsing Institutional Betrayal\n") + 
+  scale_y_continuous(labels = scales::percent, limits = c(0,1)) + 
+  theme(axis.text.x = element_text(angle = 0, vjust=0.5, size = 15)) +
+  xlab("") +
+  ylab("") +
+  scale_x_discrete(labels=c("Punished you in some way \n for expressing concerns", "Denied your experience related \n to COVID-19 in some way\n", "Suggested your experience might affect \n the reputation of the institution\n", "Mishandled a complaint or report related \n to COVID-19 safety protocols\n", "Made it difficult to share concerns \n or report a safety violation\n", "Responded inadequately to concerns about \n COVID-19 or reports of safety violations\n", "Created environment where you no longer \n felt like a valued member of the institution\n", "Covered up instances of transmission \n or safety violations\n", "Did not take proactive steps to prevent \n transmission or enact safety protocols\n", "Created environment where continued \n membership was difficult\n", "Created environment where transmission and \n safety violations seemed more likely to occur\n","Created environment where transmission and \n safety violations seemed common or normal\n")) +
+  geom_text(hjust=-0.4, vjust=0.7, size = 5) + 
+  coord_flip()
+
+#ggsave(filename = here::here("/plots/ib_plot.png"), device = "png")
+
+```
+
+```{r correlation}
+
+corr.test(data$ibq_sum, data$tsc_mean) #.22
+corr.test(data$ibq_sum, data$ies_mean) #.21
+corr.test(data$tsc_mean, data$ies_mean) #.44
+
+#corr matrix
+corr_tbl <- Hmisc::rcorr(as.matrix(data_sum))
+
+#APA style corr matrix
+table1 <- apa.cor.table(data_sum, filename="Table1_APA.doc", table.number=1)
+table1
+```
+
+```{r correlation plots}
+
+corr_plot1 <- ggplot(data, aes(x=ibq_sum, y=tsc_mean)) +
+     geom_point(color = "#56B4E9", size = 3, alpha = .5) +
+     geom_smooth(method = "lm", color = "#56B4E9", size = 3) + 
+     theme_light(20) + 
+     xlab("\nInstitutional Betrayal (Sum Score)") + 
+     ylab("Trauma Symptom Checklist (Avg Score)\n")
+corr_plot1
+
+#ggsave(filename = here::here("/plots/corr_plot1.png"), device = "png")
+
+
+corr_plot2 <- ggplot(data, aes(x=ibq_sum, y=ies_mean)) +
+     geom_point(color = "#E69F00", size = 3, alpha = 0.5) +
+     geom_smooth(method = "lm", color = "#E69F00", size = 3) + 
+     theme_light(20) + 
+     xlab("\nInstitutional Betrayal (Sum Score)") + 
+     ylab("Impact of Event Scale - COVID-19 (Avg Score)\n")
+corr_plot2
+
+#ggsave(filename = here::here("/plots/corr_plot2.png"), device = "png")
+
+```
+
+```{r regression}
+
+#relationship b/t IB and COVID-19 related avoidance/instrusion sxs, controlling for general distress, knowing someone with COVID-19, gender
+data_reg <- data %>% 
+  filter(!is.na(ibq_sum))
+
+model1 <- lm(ies_mean ~ gender + tsc_mean + covid19, data = data_reg)
+model2 <- lm(ies_mean ~ gender + tsc_mean + covid19 + ibq_sum, data = data_reg)
+anova(model1, model2)
+summary(model1)
+summary(model2)
+
+```
+
+```{r identification}
+
+#participants were asked - how much do you identify with UO/feel a part of UO before and after COVID-19
+
+#change in ID
+data %>% 
+  filter(!is.na(id_1after)) %>%
+  filter(!is.na(id_1before)) %>%
+  select(id_1after, id_1before) %>% 
+  mutate(id_1before = id_1before-1) %>% #weird conding thing from qualtrics, had to subtract 1 to get them on same scale
+  gather(scale, response) %>% 
+  group_by(scale) %>% 
+  summarize(mean = mean(response),
+            n = n(),
+            se = sd(response/sqrt(n))) %>% 
+  ggplot(aes(x = reorder(as.factor(scale), -mean), y = mean, group = 1)) + 
+  geom_line(color = "#56B4E9", size = 2) + 
+  geom_point(size = 4, color = "#56B4E9") + 
+  ylim(0,3) + 
+  scale_color_manual(values = c("#56B4E9")) + 
+  theme_light(15) + 
+  theme(legend.position = "none") + 
+  ylab("Identification with UO \n") + 
+  xlab(" ") + 
+  scale_x_discrete(labels=c("Before COVID-19", "After COVID-19"))
+
+median(data$ibq_sum, na.rm = TRUE)
+data$ib_bin <- as.factor(ifelse(data$ibq_sum <= 1, 0, 1))
+data$ib_bin2 <- as.factor(ifelse(data$ibq_sum == 0, 0, ifelse(data$ibq_sum == 1, 1, ifelse(data$ibq_sum < 5 , 2, 3))))
+
+#by IB
+data_dich <- data %>% 
+  select(id_1after, id_1before, ib_bin2) %>%
+  mutate(id_1before = id_1before-1) %>% #weird conding thing from qualtrics, had to subtract 1 to get them on same scale
+  gather(scale, response, -ib_bin2) %>% 
+  group_by(scale, ib_bin2) %>%
+  filter(!is.na(ib_bin2)) %>% 
+  summarize(mean = mean(response, na.rm = TRUE),
+            n = n(),
+            se = sd(response/sqrt(n)))
+
+data_dich %>% 
+ggplot(aes(x = reorder(as.factor(scale), -mean), y = mean, group = ib_bin2, color = ib_bin2)) + 
+  geom_line(size = 1) + 
+  geom_point(size = 2.5) + 
+  ylim(0,3) + 
+  theme_light(15) + 
+  ylab("Identification with UO \n") + 
+  xlab(" ") + 
+  scale_x_discrete(labels=c("Before COVID-19", "After COVID-19")) + 
+  scale_y_continuous(breaks = c(0, 1, 2, 3), labels = c("Not at all", "A little", "Somewhat", "Very Much"), limits = c(0,3)) +
+  scale_color_discrete(name = "IB", labels = c("0 IB", "1 IB", "2-4 IB", "5+ IB"))
+
+data <- data %>% 
+  mutate(id_1before = id_1before-1, #weird conding thing from qualtrics, had to subtract 1 to get them on same scale
+         change = id_1after - id_1before)
+
+#correlation between change score
+corr.test(data$ibq_sum, data$change) #-.12, p = .04
+
+#regression - ib predicting post score, controlling for before score
+summary(lm(id_1after ~ scale(id_1before)*scale(ibq_sum), data = data))
+
+```
+
+```{r report comparison}
+
+setwd("~/Desktop/edld capstone/edldcapstone/data")
+
+#comparing rates of covid 19-related IB and sexual assault related IB (from another datset). The SA dataset uses an earlier version of the IBQ, so adjustments were made accordingly
+data_rep <- rio::import("ib_data_report.csv", setclass = "tbl_df")
+
+data_rep1 <- data_rep %>% 
+  mutate(dataset = 2) %>% 
+  select(-total) %>% 
+  gather(item, response) %>% 
+  filter(!is.na(response)) %>% 
+  group_by(item) %>% 
+  count(response) %>% 
+  filter(response == 1) %>%
+  summarize(perc2 = round((n/98)*100,1),
+            perc = round((n/98),2)) %>% 
+  mutate(dataset = 1)
+
+data_ibq <- data %>% 
+  select(ibq_1, ibq_3, ibq_2, ibq_4, ibq_5, ibq_7, ibq_9) %>% 
+  mutate(prevent = ibq_1,
+         morelikely = ibq_3, 
+         normal = ibq_2,
+         report = ibq_4, 
+         respond = ibq_5,
+         cover = ibq_7,
+         punish = ibq_9) %>% 
+  select(prevent:punish) %>% 
+  gather(item, response) %>% 
+  filter(!is.na(response)) %>% 
+  group_by(item) %>% 
+  count(response) %>% 
+  filter(response == 1) %>%
+  summarize(perc2 = round((n/309)*100,1),
+            perc = round((n/309),2)) %>% 
+  mutate(dataset = 2)
+
+data_bind <- rbind(data_ibq, data_rep1)
+
+data_bind %>% 
+  ggplot(aes(x = reorder(item, perc), y = perc, label = perc2, group = as.factor(dataset), fill = as.factor(dataset))) + 
+  geom_col(width = 0.5, position = "dodge") + 
+  theme_light(15) + 
+  ggtitle("\nPercentage of Students Endorsing Institutional Betrayal\n") + 
+  scale_y_continuous(labels = scales::percent, limits = c(0,1)) + 
+  theme(axis.text.x = element_text(angle = 0, vjust=0.5, size = 15)) +
+  xlab("") +
+  ylab("") +
+  coord_flip() +
+  scale_fill_discrete(name = "Dataset", labels = c("Sexual Assault", "COVID-19"))  + 
+  scale_x_discrete(labels=c("Punished you in some way", "Made it difficult to report", "Covered up instances", "Responded inadequately", "Did not take proactive steps \nto prevent", "Created environment where more \n likely to occur\n", "Created environment where \n normal/no big deal\n"))
 ```
