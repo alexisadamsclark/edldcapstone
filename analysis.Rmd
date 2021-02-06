@@ -95,7 +95,7 @@ ib_plot <- data %>%
          perc2 = round((n/309)*100,1)) %>% 
   ggplot(aes(x = reorder(item, perc), y = perc, label = perc2)) + 
   geom_col(fill = "#56B4E9", width = 0.5) + 
-  theme_light(15) + 
+  theme_light(13) + 
   ggtitle("\nPercentage of Students Endorsing Institutional Betrayal\n") + 
   scale_y_continuous(labels = scales::percent, limits = c(0,1)) + 
   theme(axis.text.x = element_text(angle = 0, vjust=0.5, size = 15)) +
@@ -104,6 +104,7 @@ ib_plot <- data %>%
   scale_x_discrete(labels=c("Punished you in some way \n for expressing concerns", "Denied your experience related \n to COVID-19 in some way\n", "Suggested your experience might affect \n the reputation of the institution\n", "Mishandled a complaint or report related \n to COVID-19 safety protocols\n", "Made it difficult to share concerns \n or report a safety violation\n", "Responded inadequately to concerns about \n COVID-19 or reports of safety violations\n", "Created environment where you no longer \n felt like a valued member of the institution\n", "Covered up instances of transmission \n or safety violations\n", "Did not take proactive steps to prevent \n transmission or enact safety protocols\n", "Created environment where continued \n membership was difficult\n", "Created environment where transmission and \n safety violations seemed more likely to occur\n","Created environment where transmission and \n safety violations seemed common or normal\n")) +
   geom_text(hjust=-0.4, vjust=0.7, size = 5) + 
   coord_flip()
+ib_plot
 
 #ggsave(filename = here::here("/plots/ib_plot.png"), device = "png")
 
@@ -195,7 +196,7 @@ data$ib_bin2 <- as.factor(ifelse(data$ibq_sum == 0, 0, ifelse(data$ibq_sum == 1,
 #by IB
 data_dich <- data %>% 
   select(id_1after, id_1before, ib_bin2) %>%
-  mutate(id_1before = id_1before-1) %>% #weird conding thing from qualtrics, had to subtract 1 to get them on same scale
+  mutate(id_1before = id_1before-1) %>% #weird coding thing from qualtrics, had to subtract 1 to get them on same scale
   gather(scale, response, -ib_bin2) %>% 
   group_by(scale, ib_bin2) %>%
   filter(!is.na(ib_bin2)) %>% 
@@ -205,10 +206,10 @@ data_dich <- data %>%
 
 data_dich %>% 
 ggplot(aes(x = reorder(as.factor(scale), -mean), y = mean, group = ib_bin2, color = ib_bin2)) + 
-  geom_line(size = 1) + 
+  geom_line(size = 1.5) + 
   geom_point(size = 2.5) + 
   ylim(0,3) + 
-  theme_light(15) + 
+  theme_light(20) + 
   ylab("Identification with UO \n") + 
   xlab(" ") + 
   scale_x_discrete(labels=c("Before COVID-19", "After COVID-19")) + 
