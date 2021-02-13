@@ -1,0 +1,33 @@
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+
+{\centering \includegraphics[width=\textwidth]{papaja_doc_files/figure-latex/figure1-1}
+
+}
+
+\caption{Percentage of Students Endorsing Institutional Betrayal
+}\label{fig:figure1}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+
+{\centering \includegraphics[width=\textwidth]{papaja_doc_files/figure-latex/figure2-1}
+
+}
+
+\caption{Institutional Betrayal Score by Gender (N = 309)
+}\label{fig:figure2}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+
+{\centering \includegraphics[width=\textwidth]{papaja_doc_files/figure-latex/figure3-1}
+
+}
+
+\caption{Institutional Identity by Institutional Betrayal (N = 309)
+}\label{fig:figure3}
+\end{figure*}

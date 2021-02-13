@@ -1,0 +1,88 @@
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:table1}Example corr matrix}
+
+\begin{tabular}{lllll}
+\toprule
+ & \multicolumn{1}{c}{1} & \multicolumn{1}{c}{2} & \multicolumn{1}{c}{$M$} & \multicolumn{1}{c}{$SD$}\\
+\midrule
+1. Institutional Betrayal Score & - &  & 2.47 & 2.90\\
+2. Trauma Symptom Score & .22*** & - & 0.87 & 0.53\\
+3. Impact of Event Score & .21*** & .44*** & 1.07 & 0.64\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} * p < 0.05; ** p < 0.01; *** p < 0.001}
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:table2}A full regression table.}
+
+\begin{tabular}{lllll}
+\toprule
+Predictor & \multicolumn{1}{c}{$b$} & \multicolumn{1}{c}{95\% CI} & \multicolumn{1}{c}{$t(276)$} & \multicolumn{1}{c}{$p$}\\
+\midrule
+Intercept & 0.33 & $[0.16$, $0.50]$ & 3.78 & < .001\\
+GenderWoman & 0.19 & $[0.04$, $0.34]$ & 2.54 & .012\\
+GenderTrans/Non-conforming/Non-binary & 0.33 & $[-0.13$, $0.79]$ & 1.43 & .154\\
+Covid19know someone with covid & 0.21 & $[0.07$, $0.35]$ & 3.00 & .003\\
+Tsc mean & 0.40 & $[0.27$, $0.53]$ & 6.18 & < .001\\
+Ibq sum & 0.03 & $[0.00$, $0.05]$ & 2.39 & .017\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} * p < 0.05; ** p < 0.01; *** p < 0.001}
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:table3}A full regression table.}
+
+\begin{tabular}{lllll}
+\toprule
+Predictor & \multicolumn{1}{c}{$b$} & \multicolumn{1}{c}{95\% CI} & \multicolumn{1}{c}{$t(301)$} & \multicolumn{1}{c}{$p$}\\
+\midrule
+Intercept & 0.07 & $[-0.08$, $0.21]$ & 0.89 & .377\\
+Scaleid 1before & 0.21 & $[0.06$, $0.35]$ & 2.79 & .006\\
+Ibq sum & -0.02 & $[-0.06$, $0.02]$ & -0.86 & .390\\
+Scaleid 1before $\times$ Ibq sum & -0.06 & $[-0.10$, $-0.02]$ & -2.86 & .005\\
+\bottomrule
+\addlinespace
+\end{tabular}
+
+\begin{tablenotes}[para]
+\normalsize{\textit{Note.} * p < 0.05; ** p < 0.01; *** p < 0.001}
+\end{tablenotes}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}

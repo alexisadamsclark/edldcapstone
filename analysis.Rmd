@@ -156,7 +156,7 @@ data_reg <- data %>%
   filter(!is.na(ibq_sum))
 
 model1 <- lm(ies_mean ~ gender + tsc_mean + covid19, data = data_reg)
-model2 <- lm(ies_mean ~ gender + tsc_mean + covid19 + ibq_sum, data = data_reg)
+model2 <- lm(ies_mean ~ gender + covid19 + tsc_mean + ibq_sum, data = data_reg)
 anova(model1, model2)
 summary(model1)
 summary(model2)

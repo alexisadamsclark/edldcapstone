@@ -4,7 +4,14 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-devtools::install_github("crsh/papaja")
+#devtools::install_github("crsh/papaja")
 library(papaja)
+install.packages('tinytex')
+
 tinytex::install_tinytex()
+tinytex:::install_yihui_pkgs()
+
+tinytex::parse_install(
+  text = "! LaTeX Error: File `threeparttable.sty' not found."
+)
 ```

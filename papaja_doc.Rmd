@@ -1,7 +1,6 @@
 ---
 title             : "COVID-19-Related Institutional Betrayal Among A Sample of Undergraduate Students"
-shorttitle        : "COVID-18 Institutional Betrayal"
-
+shorttitle        : "COVID-19 Institutional Betrayal"
 author: 
   - name          : "Alexis Adams-Clark"
     affiliation   : "1,2"
@@ -17,18 +16,14 @@ author:
     role:
       - Conceptualization
       - Writing - Review & Editing
-
 affiliation:
   - id            : "1"
     institution   : "University of Oregon"
   - id            : "2"
     institution   : "Center for Institutional Courage"
-
 authornote: |
-  Add complete departmental affiliations for each author here. Each new line herein must be indented, like this line.
-
-  Enter author note here.
-
+  University of Oregon, Department of Psychology, 1227 University St. Eugene, OR 97401 
+  Center for Institutional Courage, Inc., Palo Alto, CA
 abstract: |
   One or two sentences providing a **basic introduction** to the field,  comprehensible to a scientist in any discipline.
   
@@ -44,38 +39,37 @@ abstract: |
   
   Two or three sentences to provide a **broader perspective**, readily comprehensible to a scientist in any discipline.
   
-  <!-- https://tinyurl.com/ybremelq -->
   
-keywords          : "keywords"
+  <!-- https://tinyurl.com/ybremelq -->
+keywords          : "institutional betrayal, institutional courage, trauma symptoms, COVID-19"
 wordcount         : "X"
-
 bibliography      : ["r-references.bib"]
-
 floatsintext      : no
 figurelist        : no
 tablelist         : no
 footnotelist      : no
 linenumbers       : yes
 mask              : no
-draft             : no
-
+draft             : yes
 documentclass     : "apa6"
 classoption       : "man"
 output            : papaja::apa6_pdf
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r setup, include = FALSE}
 library("papaja")
 r_refs("r-references.bib")
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+options(scipen = 999)
+
+library(tidyverse)
+library(rio)
+library(corx)
+
 ```
-
-```{r analysis-preferences}
-# Seed for random number generation
-set.seed(42)
-knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
-```
-
-
 
 # Methods
 We report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. <!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
@@ -89,8 +83,147 @@ We report how we determined our sample size, all data exclusions (if any), all m
 ## Data analysis
 We used `r cite_r("r-references.bib")` for all our analyses.
 
-
 # Results
+
+```{r results}
+setwd("~/Desktop/edld capstone/edldcapstone/data")
+data <- rio::import("ib_data_clean.csv", setclass = "tbl_df") 
+
+#descriptives of IB
+perc <- data %>% 
+  count(ibq_sum > 0) %>% 
+  mutate(perc = (n/309)*100)
+
+data$gender <- factor(data$gender, levels = c("Man", "Woman", "Trans/Non-conforming/Non-binary"))
+
+```
+
+```{r figure1, echo=FALSE, fig.cap = cap, fig.pos='H', out.width="\\textwidth", fig.align = "center"}
+data %>% 
+  select(starts_with("ibq"), -ibq_sum) %>% 
+  gather(item, response) %>% 
+  filter(!is.na(response)) %>% 
+  group_by(item) %>% 
+  count(response) %>% 
+  filter(response == 1) %>%
+  mutate(perc = round((n/309),2),
+         perc2 = round((n/309)*100,1)) %>% 
+  ggplot(aes(x = reorder(item, perc), y = perc, label = perc2)) + 
+  geom_col(fill = "#56B4E9", width = 0.5) + 
+  theme_light(10) + 
+  scale_y_continuous(labels = scales::percent, limits = c(0,1)) + 
+  theme(axis.text.x = element_text(angle = 0, vjust=0.5, size = 10)) +
+  xlab("") +
+  ylab("") +
+  scale_x_discrete(labels=c("Punished you in some way \n for expressing concerns\n", "Denied your experience related \n to COVID-19 in some way\n", "Suggested your experience might affect \n the reputation of the institution\n", "Mishandled a complaint or report related \n to COVID-19 safety protocols\n", "Made it difficult to share concerns \n or report a safety violation\n", "Responded inadequately to concerns about \n COVID-19 or reports of safety violations\n", "Created environment where you no longer \n felt like a valued member of the institution\n", "Covered up instances of transmission \n or safety violations\n", "Did not take proactive steps to prevent \n transmission or enact safety protocols\n", "Created environment where continued \n membership was difficult\n", "Created environment where transmission and \n safety violations seemed more likely to occur\n","Created environment where transmission and \n safety violations seemed common or normal\n")) +
+  geom_text(hjust=-0.4, vjust=0.7, size = 4) + 
+  coord_flip()
+cap <- sprintf("Percentage of Students Endorsing Institutional Betrayal\n")
+
+```
+
+```{r figure2, echo=FALSE, fig.cap = cap, fig.pos='H', out.width="\\textwidth", fig.align = "center"}
+data %>% 
+  filter(!is.na(ibq_sum)) %>%
+  filter(!is.na(gender)) %>%
+  group_by(gender) %>% 
+  summarize(mean = mean(ibq_sum),
+            n = n(),
+            se = sd(ibq_sum)/sqrt(n)) %>% 
+  ggplot(aes(x = gender, y = mean, color = gender)) + 
+  geom_point(size = 2, aes(color = gender)) + 
+  theme_light(12) + 
+  geom_errorbar(aes(ymin = mean + qnorm(.025)*se,
+                    ymax = mean + qnorm(.975)*se,
+                    group = gender,
+                    color = gender),
+                    size =  0.8,
+                    width = 0.2) + 
+  ylim(0,8) + 
+  scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) + 
+  theme(legend.position = "none") + 
+  ylab("IBQ Score \n") + 
+  xlab(" ")
+cap <- sprintf("Institutional Betrayal Score by Gender (N = 309) \n")
+
+```
+The majority of students (`r perc$perc[[2]]`%) reported at least one type of COVID-19-related institutional betrayal. The most common types of institutional betrayal reported were "creating an environment in which COVID-19 transmission was more common or seemed normal" and "failure to prevent COVID-19 transmission" (See Figure \@ref(fig:figure1)). There were no significant differences in COVID-19-related institutional betrayal by gender (See Figure \@ref(fig:figure2)). 
+
+```{r table1}
+data_sum <- data %>% 
+  select(ibq_sum, tsc_mean, ies_mean) %>% 
+  mutate(`Institutional Betrayal Score` = ibq_sum,
+        `Trauma Symptom Score` = tsc_mean, 
+        `Impact of Event Score` = ies_mean) %>% 
+  select(-c(ibq_sum, tsc_mean, ies_mean))
+
+x <- corx(data_sum,
+          triangle = "lower",
+          stars = c(0.05, 0.01, 0.001),
+          describe = c(`$M$` = mean, `$SD$` = sd))
+
+papaja::apa_table(x$apa, # apa contains the data.frame needed for apa_table
+                  caption = "Example corr matrix",
+                  note = "* p < 0.05; ** p < 0.01; *** p < 0.001",
+                  escape = F)
+
+```
+
+
+```{r table2}
+lm_out <- lm(ies_mean ~ gender + covid19 + tsc_mean + ibq_sum, data = data)
+apa_lm <- apa_print(lm_out)
+apa_table(
+  apa_lm$table, 
+  caption = "A full regression table.",
+  note = "* p < 0.05; ** p < 0.01; *** p < 0.001",
+  escape = F
+)
+```
+
+Institutional betrayal was significantly associated with both general trauma-related symptoms and COVID-19 specific avoidance and intrusion symptoms, *p* < .001 (see Table \@ref(tab:table1)). Institutional betrayal was associated with unique variance in COVID-19 specific avoidance and intrusion symptoms, *p* = .01 (see Table \@ref(tab:table2)), even when controlling for gender, knowing someone close with COVID-19, and non-specific trauma-related distress. 
+
+```{r figure3, echo=FALSE, fig.cap = cap, fig.pos='H', out.width="\\textwidth", fig.align = "center"}
+
+data$ib_bin2 <- as.factor(ifelse(data$ibq_sum == 0, 0, ifelse(data$ibq_sum == 1, 1, ifelse(data$ibq_sum < 5 , 2, 3))))
+
+data_dich <- data %>% 
+  select(id_1after, id_1before, ib_bin2) %>%
+  mutate(id_1before = id_1before-1) %>% #weird coding thing from qualtrics, had to subtract 1 to get them on same scale
+  gather(scale, response, -ib_bin2) %>% 
+  group_by(scale, ib_bin2) %>%
+  filter(!is.na(ib_bin2)) %>% 
+  summarize(mean = mean(response, na.rm = TRUE),
+            n = n(),
+            se = sd(response/sqrt(n)))
+
+data_dich %>% 
+ggplot(aes(x = reorder(as.factor(scale), -mean), y = mean, group = ib_bin2, color = ib_bin2)) + 
+  geom_line(size = 1.5) + 
+  geom_point(size = 2.5) + 
+  theme_light(12) + 
+  ylab("Identification with UO \n") + 
+  xlab(" ") + 
+  scale_x_discrete(labels=c("Before COVID-19", "After COVID-19")) + 
+  scale_y_continuous(breaks = c(0, 1, 2, 3), labels = c("Not at all", "A little", "Somewhat", "Very Much"), limits = c(0,3)) +
+  scale_color_discrete(name = "IB", labels = c("0 IB", "1 IB", "2-4 IB", "5+ IB"))
+
+cap <- sprintf("Institutional Identity by Institutional Betrayal (N = 309) \n")
+
+```
+
+```{r table3}
+lm_out1 <- lm(lm(scale(id_1after) ~ scale(id_1before)*ibq_sum, data = data))
+apa_lm1 <- apa_print(lm_out1)
+apa_table(
+  apa_lm1$table, 
+  caption = "A full regression table.",
+  note = "* p < 0.05; ** p < 0.01; *** p < 0.001",
+  escape = F
+)
+
+```
+
 
 # Discussion
 
