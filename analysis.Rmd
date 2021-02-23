@@ -35,10 +35,32 @@ data <- rio::import("ib_data_clean.csv", setclass = "tbl_df") #for some reason h
 
 ```{r ib descriptives}
 
+data %>% 
+  count(gender)
+
+data %>% 
+  count(raceethn)
+
+
+data$age <- as.double(data$age)
+mean(data$age, na.rm = TRUE)
+sd(data$age, na.rm = TRUE)
+
+  
 #descriptives of sum/mean scores
 data_sum <- data %>% 
   select(ibq_sum, tsc_mean, ies_mean)
+
+describe(data$ibq_sum)
 skim(data_sum)
+
+data %>% 
+  select(tsc_1:tsc_40) %>% 
+  psych::alpha()
+
+data %>% 
+  select(ies_1:ies_15) %>% 
+  psych::alpha()
 
 #descriptives of IB
 data %>% 
