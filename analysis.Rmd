@@ -183,6 +183,9 @@ anova(model1, model2)
 summary(model1)
 summary(model2)
 
+data %>% 
+  count(student)
+
 ```
 
 ```{r identification}
