@@ -183,8 +183,21 @@ anova(model1, model2)
 summary(model1)
 summary(model2)
 
-data %>% 
-  count(student)
+```
+
+```{r dem analyses}
+summary(lm(ibq_sum ~ gender, data = data))
+
+data_dem <- data %>% 
+  dplyr::mutate(liveeug = recode_factor(liveeug, 
+                              "not living in eugene at all" = "not full time",
+                              "part time" = "not full time",
+                              "living in eugene" = "living in eugene",
+                               .missing = NA_character_))
+summary(lm(ibq_sum ~ liveeug, data = data_dem))
+summary(lm(ibq_sum ~ housing, data = data_dem))
+summary(lm(ibq_sum ~ inperson, data = data_dem))
+summary(lm(ibq_sum ~ covid19, data = data_dem))
 
 ```
 
@@ -251,6 +264,20 @@ corr.test(data$ibq_sum, data$change) #-.12, p = .04
 #regression - ib predicting post score, controlling for before score
 summary(lm(id_1after ~ scale(id_1before)*scale(ibq_sum), data = data))
 
+
+
+##Suing MLM
+id_data2 <- data %>% 
+  filter(!is.na(id_1after)) %>%
+  filter(!is.na(id_1before)) %>%
+  select(id_1after, id_1before, pid, ibq_sum) %>% 
+  mutate(id_1before = id_1before-1) %>% #weird coding thing from qualtrics, had to subtract 1 to get them on same scale
+  gather(scale, response, -pid, -ibq_sum)
+
+library(lmerTest)
+lmm <- lmer(response ~ scale*ibq_sum +(1|pid), data = id_data2)
+summary(lmm)
+anova(lmm)
 ```
 
 ```{r report comparison}
