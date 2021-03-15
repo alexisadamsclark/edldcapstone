@@ -28,6 +28,28 @@
 
 }
 
-\caption{Institutional Identity by Institutional Betrayal, Before and After COVID-19 (N = 309)
+\caption{Correlation Between Institutional Betrayal and Trauma-Related Symptoms (N = 309)
 }\label{fig:figure3}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+
+{\centering \includegraphics[width=\textwidth]{papaja_doc_files/figure-latex/figure4-1}
+
+}
+
+\caption{Correlation Between Institutional Betrayal and Intrusive/Avoidant Cognitions (N = 309)
+}\label{fig:figure4}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+[H]
+
+{\centering \includegraphics[width=\textwidth]{papaja_doc_files/figure-latex/figure5-1}
+
+}
+
+\caption{Institutional Identity by Institutional Betrayal, Before and After COVID-19 (N = 309)
+}\label{fig:figure5}
 \end{figure*}

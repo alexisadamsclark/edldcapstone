@@ -21,8 +21,9 @@ affiliation:
   - id            : "2"
     institution   : "Center for Institutional Courage"
 authornote: |
-  University of Oregon, Department of Psychology, 1227 University St. Eugene, OR 97401 
-  Center for Institutional Courage, Inc., Palo Alto, CA
+  University of Oregon, Department of Psychology, 1227 University St. Eugene, OR 97401. 
+  Center for Institutional Courage, Inc., Palo Alto, CA.
+  *Special Note for Daniel and Joe- This is a super rough draft! If I had more time, I'd tinker around with the tables a little bit more to get the variable names to be better, but it just wasn't behaving! This is also one part of a (hopefully) 2-part study. Thanks!* 
 abstract: |
   Individuals are dependent on institutions (e.g., universities, governments, healthcare systems) to protect their safety and advocate for their needs. When institutions harm the individuals who depend on them, they commit *institutional betrayal*, which has been associated with numerous negative outcomes. Throughout the COVID-19 pandemic, students have put entrusted universities to protect both their health and their educational opportunities. However, many universities have failed to meet these expectations, and it is likely that many students experience a sense of COVID-19-related institutional betrayal. The current study examined the prevalence and correlates of institutional betrayal among a sample of 309 undergraduate students at a large, public university in the Northwest United States. Results revealed that 66% of students endorsed at least one type of COVID-19-related institutional betrayal. Higher institutional betrayal ratings were significantly correlated with both current general trauma related symptoms, *r* = .21, *p* < .001, and COVID-19-related trauma symptoms, *r* = .22, *p* < .001. A decrease in students' identification with the university since COVID-19 was related to students' experiences with institutional betrayal, *r* = .12, *p* = .04. These results suggest that COVID-19 institutional betrayal is common and may be associated with distress among undergraduate students. 
   
@@ -84,7 +85,7 @@ The current study seeks to describe and characterize the prevalence of students'
 
 # Method
 ## Participants 
-Participants were recruited from the Human Subjects Pool at a large, public university in the Northwest United States. The university's Human Subjects Pool contains undergraduate students currently enrolled in introductory psychology and linguistics courses, and these students receive course credit for their participation in research studies. Students are not aware of the topic of any given study prior to signing up, which reduces self-selection bias (although they do have the option to end participation during the informed consent process or at any time throughout the study). A total of 346 undergraduate students signed up and consented to participate in the present study. Participants who failed to correctly answer at least four out of five "attention check" questions randomly located throughout the survey (e.g. "please choose 'strongly agree' if you are paying attention") were removed prior to data analysis (n = 37). The final sample used for data analysis consisted of 309 participants (71.5% women, 26.5% men, 1.9% non-binary/gender-nonconforming). The majority of participants were White (63.4%) and first-year (44.3%) or second-year (29.4%) students. The average age of participants was 19.39 (*SD* = 1.45), 
+Participants were recruited from the Human Subjects Pool at a large, public university in the Northwest United States. The university's Human Subjects Pool contains undergraduate students currently enrolled in introductory psychology and linguistics courses, and these students receive course credit for their participation in research studies. Students are not aware of the topic of any given study prior to signing up, which reduces self-selection bias (although they do have the option to end participation during the informed consent process or at any time throughout the study). A total of 346 undergraduate students signed up and consented to participate in the present study. Participants who failed to correctly answer at least four out of five "attention check" questions randomly located throughout the survey (e.g. "please choose 'strongly agree' if you are paying attention") were removed prior to data analysis (*n* = 37). The final sample used for data analysis consisted of 309 participants (71.5% women, 26.5% men, 1.9% non-binary/gender-nonconforming). The majority of participants were White (63.4%) and first-year (44.3%) or second-year (29.4%) students. The average age of participants was 19.39 (*SD* = 1.45), 
 
 These data were collected during the Fall 2020 term of the academic year, during which COVID-19 infections were steadily climbing at the university, local, and national level. The university at the center of the current investigation adopted a largely remote learning environment. However, the university required all first-year students to live in dormitories on campus, and a minority of classes were held in person. 
 
@@ -101,7 +102,7 @@ These data were collected during the Fall 2020 term of the academic year, during
 In the present study, all participants reviewed an informed consent form before participation. After consenting to participate, participants completed questionnaires through an online survey hosted on *Qualtrics* survey software from a personal electronic device in a private location of their choosing. Participants had the option to leave items blank and to discontinue participation at any time. Upon completion of the survey, participants reviewed a debriefing form and received course credit for their participation. All study procedures were approved by the university's Office of Research Compliance (Institutional Review Board).
 
 ## Data analysis
-We used `r cite_r("r-references.bib")` for all our analyses. Out of 23,484 data points, were 358 missing (1.5%). Due to the low rate of missing data, we opted to not impute missing data. We used pairwise deletion for the calculations of correlation coefficients and listwise deletion in regression models. Although not reported, we re-ran analyses using listwise deletion across all variables, and results did not substantially differ. 
+We used `r cite_r("r-references.bib")` for all our analyses. Out of 23,484 data points, 358 were missing (1.5%). Due to the low rate of missing data, we opted to not impute missing data. We used pairwise deletion for the calculations of correlation coefficients and listwise deletion in regression models. Although not reported, we re-ran analyses using listwise deletion across all variables, and results did not substantially differ. 
 
 # Results
 
@@ -167,7 +168,7 @@ data %>%
 cap <- sprintf("Institutional Betrayal Score by Gender (N = 309) \n")
 
 ```
-The majority of students (`r perc$perc[[2]]`%) reported at least one type of COVID-19-related institutional betrayal. The most common types of institutional betrayal reported were "creating an environment in which COVID-19 transmission was more common or seemed normal" and "failure to prevent COVID-19 transmission" (See Figure \@ref(fig:figure1)). There were no significant differences in COVID-19-related institutional betrayal by gender (See Figure \@ref(fig:figure2)), enrollment in in-person classes, residence in on-campus housing, residence in the university town, or knowing someone with COVID-19.   
+The majority of students (`r perc$perc[[2]]`%) reported at least one type of COVID-19-related institutional betrayal. The most common types of institutional betrayal reported were "creating an environment in which COVID-19 transmission was more common or seemed normal" and "creating an environment where COVID-19 transmission seemed more likely to occur" (see Figure \@ref(fig:figure1)). There were no significant differences in COVID-19-related institutional betrayal by gender (see Figure \@ref(fig:figure2)), enrollment in in-person classes, residence in on-campus housing, residence in the university town, or knowing someone with COVID-19, *p* > .05.   
 
 ```{r table1}
 data_sum <- data %>% 
@@ -183,7 +184,7 @@ x <- corx(data_sum,
           describe = c(`$M$` = mean, `$SD$` = sd))
 
 papaja::apa_table(x$apa, # apa contains the data.frame needed for apa_table
-                  caption = "Example corr matrix",
+                  caption = "Correlations among Institutional Betrayal, Trauma-Related Symptoms, and COVID-19 Intrusion/Avoidance Symptoms",
                   note = "* p < 0.05; ** p < 0.01; *** p < 0.001",
                   escape = F)
 
@@ -198,15 +199,40 @@ lm_out <- lm(ies_mean ~ gender + covid19 + tsc_mean + ibq_sum, data = data)
 apa_lm <- apa_print(lm_out)
 apa_table(
   apa_lm$table, 
-  caption = "A full regression table.",
+  caption = "Results of a Regression Model Predicting COVID-Specific Intrusive/Avoidant Symptoms (N = 309)",
   note = "* p < 0.05; ** p < 0.01; *** p < 0.001",
   escape = F
 )
 ```
 
-Institutional betrayal was significantly associated with both general trauma-related symptoms and COVID-19 specific avoidance and intrusion symptoms, *p* < .001 (see Table \@ref(tab:table1)). Institutional betrayal was associated with unique variance in COVID-19 specific avoidance and intrusion symptoms, *p* = .01 (see Table \@ref(tab:table2)), even when controlling for gender, knowing someone close with COVID-19, and non-specific trauma-related distress. 
-
 ```{r figure3, echo=FALSE, fig.cap = cap, fig.pos='H', out.width="\\textwidth", fig.align = "center"}
+data %>% 
+  ggplot(aes(x = ibq_sum, y = tsc_mean)) + 
+  geom_point(size = 2, color = "#E69F00", alpha = 0.7) + 
+  geom_smooth(method = "lm", color = "#E69F00") +
+  theme_light(12) + 
+  theme(legend.position = "none") + 
+  ylab("Trauma Symptoms (Avg) \n") + 
+  xlab("IBQ Score")
+cap <- sprintf("Correlation Between Institutional Betrayal and Trauma-Related Symptoms (N = 309) \n")
+
+```
+
+```{r figure4, echo=FALSE, fig.cap = cap, fig.pos='H', out.width="\\textwidth", fig.align = "center"}
+data %>% 
+  ggplot(aes(x = ibq_sum, y = ies_mean)) + 
+  geom_point(size = 2, color = "#56B4E9", alpha = 0.7) + 
+  geom_smooth(method = "lm", color = "#56B4E9") +
+  theme_light(12) + 
+  theme(legend.position = "none") + 
+  ylab("Trauma Symptoms (Avg) \n") + 
+  xlab("IBQ Score")
+cap <- sprintf("Correlation Between Institutional Betrayal and Intrusive/Avoidant Cognitions (N = 309) \n")
+```
+
+Institutional betrayal was significantly associated with both general trauma-related symptoms (see Figure \@ref(fig:figure3)), and COVID-19 specific avoidance and intrusion symptoms (see Figure \@ref(fig:figure4)), *p* < .001 (see Table \@ref(tab:table1)). Institutional betrayal was associated with unique variance in COVID-19 specific avoidance and intrusion symptoms, *p* = .01 (see Table \@ref(tab:table2)), even when controlling for gender, knowing someone close with COVID-19, and non-specific trauma-related distress. 
+
+```{r figure5, echo=FALSE, fig.cap = cap, fig.pos='H', out.width="\\textwidth", fig.align = "center"}
 
 data$ib_bin2 <- as.factor(ifelse(data$ibq_sum == 0, 0, ifelse(data$ibq_sum == 1, 1, ifelse(data$ibq_sum < 5 , 2, 3))))
 
@@ -270,13 +296,22 @@ corr <- psych::corr.test(id_dat$change, id_dat$ibq_sum)
 r <- round(corr[[1]], 2)
 p_r <- round(corr[[4]],2)
 ```
-Students retrospectively rated their identification with (i.e., feeling "a part of") the university prior to COVID-19 (*M* = `r idb`, *SD* = `r idb_sd`) as significantly higher than their identification since COVID-19 (*M* = `r ida`, *SD* = `r ida_sd`), *t* = `r t` , *p* = < .001. The decrease in identification with the university was inversely related to institutional betrayal, *r* = `r r`, *p* = `r p_r`, such that students who experienced more instances of institutional betrayal reported a greater decrease in their identification with the university (See Figure \@ref(fig:figure3)).
+Students retrospectively rated their identification with (i.e., feeling "a part of") the university prior to COVID-19 (*M* = `r idb`, *SD* = `r idb_sd`) as significantly higher than their identification since COVID-19 (*M* = `r ida`, *SD* = `r ida_sd`), *t* = `r t` , *p* = < .001. The decrease in identification with the university was inversely related to institutional betrayal, *r* = `r r`, *p* = `r p_r`, such that students who experienced more instances of institutional betrayal reported a greater decrease in their identification with the university (see Figure \@ref(fig:figure5)).
 
 # Discussion
 
-This study is the first to apply the concept of *institutional betrayal* (@smith2014) to undergraduate students' experiences at their university during COVID-19. Overall, students reported experiencing instances of institutional betrayal related to their universities' handling of COVID-19-related safety concerns. Unsurprisingly, the most common instances of institutional betrayal (e.g., "creating an environment where transmission and/or safety violations seemed common or normal" and  "creating an environment where transmission and/or safety violations seemed more likely to occur") were also the most common types reported in prior studies on institutional betrayal related to sexual assault and harassment (@smith2013, @lind2020). Punishment for reporting and active denial of students' experiences (forms of institutional commission) were the least common, yet still reported by 10% of students in our sample. 
+This study is the first to apply the concept of *institutional betrayal* [@smith2014] to undergraduate students' experiences at their university during COVID-19. Overall, we found that students are experiencing institutional betrayal related to their universities' handling of COVID-19-related safety concerns. Unsurprisingly, the most common instances of institutional betrayal (e.g., "creating an environment where transmission and/or safety violations seemed common or normal" and  "creating an environment where transmission and/or safety violations seemed more likely to occur") are also the most common types reported in prior studies on institutional betrayal following sexual assault and harassment [@smith2013; @lind2020]. Punishment for reporting and active denial of students' experiences (forms of institutional commission) were the least commonly reported in this study, yet still reported by 10% of students in our sample. 
 
-Like prior research (@smith2013), we also found that experiences of institutional betrayal were associated with both symptoms of general trauma-related distress (e.g., depression, anxiety, sleep problems), as well as COVID-19-specific intrusive and avoidant cognitions (e.g., intrusive thoughts about COVID-19, spending a lot of time trying to avoid thinking about COVID-19). The relationship between institutional betrayal and these COVID-19-specific cognitions were related, even when controlling for general distress, gender, and exposure to someone with COVID-19. 
+Like prior research [@smith2013], we also found that experiences of institutional betrayal are associated with both symptoms of general trauma-related distress (e.g., depression, anxiety, sleep problems), as well as COVID-19-specific intrusive and avoidant cognitions (e.g., intrusive thoughts about COVID-19, spending a lot of time trying to avoid thinking about COVID-19). The relationship between institutional betrayal and these COVID-19-specific cognitions persists, even when controlling for general distress, gender, and exposure to someone with COVID-19. Similar unique associations between institutional betrayal and symptoms of distress have been replicated in numerous other studies [@smith2013; @smith2017; @lind2020]. Unlike prior studies, we also investigated the relationship between institutional betrayal and a novel outcome -- students' reported identification with (feeling "a part of") the university, prior to and since COVID-19. We found that students report experiencing a decrease in their identification since COVID-19, and this decrease is also greater among students reporting more institutional betrayal. 
+
+These results have numerous important implications for both students and university administrators alike. First, these results bolster our claim that experiences of trauma-related distress are not solely individual phenomena, but instead are influenced by institutional systems and policies. Although all undergraduate students are in the midst of an extraordinarily stressful global pandemic, institutions such as universities, have the potential to contribute to and exacerbate students' negative outcomes related to these experiences if they commit institutional betrayal. The influence of institutional betrayal may have important implications for universities, even after the COVID-19 pandemic is contained. If institutional betrayal becomes the default throughout the pandemic, this may not only influence students' identification with the university as a whole, but may, in turn, also influence students' engagement with university activities, future enrollment, and/or future financial contributions to the university. Institutional betrayal, therefore, should be taken seriously by university administration.
+
+However, these results should be interpreted in light of their limitations. First, this data was collected cross-sectionally, and thus we cannot make causal claims. Additional, longitudinal data will need to be collected in order to establish a direct causal link between students' institutional betrayal experiences and subsequent distress. However, we hope that the establishment of these preliminary relationships will convince university administrators that students notice institutional betrayal and are likely not immune to its noxious effects. In addition, the results of this study are situated within the context of a single university in one physical location. As such, it is difficult to conclude how these results generalize to other universities, which may have implemented markedly different COVID-19 policies and procedures. We imagine that universities that have implemented stricter policies that prioritize students' health and well-being over financial gain may be less at risk of committing institutional betrayal. Further, the university at the center of this study is located in an area of the Northwest United States with limited racial/ethnic diversity. It is unknown how experiences of racism and/or other types of marginalization may influence perceptions of COVID-19-related institutional betrayal at the university level. 
+
+Future research should build upon this study's limitations. In addition to collecting data longitundinally in a more diverse sample at campuses with varying COVID-19 policies, future research should also examine the relationship between COVID-19-related institutional betrayal and other possible confounds not included in this data collection. In order to further tease out the unique relationship between COVID-19-related institutional betrayal and distress, future analyses should control for students' prior trauma history, as well as their own experience with COVID-19 infection and its severity (*Note: This is what we are currently collecting data on, and I plan to add a Study 2*). Future research would also benefit from collecting qualitative data about students' various experiences of institutional betrayal in their own words throughout the COVID-19 pandemic. 
+
+We hope that this research serves as an initial step to further investigate the prevalence of institutional betrayal in a variety of domains, as well as the role that institutonal responses play in predicting individuals mental health and physical health outcomes following chronic stress and trauma. Ultimately, we hope that institutional betrayal can not only be eliminated, but be replaced with actions that center the needs and wants of its institutional members. We believe that such actions that fly in the face of institutional betrayal -- *institutional courage* -- may instead buffer individuals against stress. During COVID-19, universities may not be able to exert control over the pandemic on a national level, but they may be able to create and enact institutional policies imbued with courage. 
+
 
 \newpage
 

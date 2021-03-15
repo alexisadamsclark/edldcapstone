@@ -5,7 +5,7 @@
 \begin{center}
 \begin{threeparttable}
 
-\caption{\label{tab:table1}Example corr matrix}
+\caption{\label{tab:table1}Correlations among Institutional Betrayal, Trauma-Related Symptoms, and COVID-19 Intrusion/Avoidance Symptoms}
 
 \begin{tabular}{lllll}
 \toprule
@@ -33,7 +33,7 @@
 \begin{center}
 \begin{threeparttable}
 
-\caption{\label{tab:table2}A full regression table.}
+\caption{\label{tab:table2}Results of a Regression Model Predicting COVID-Specific Intrusive/Avoidant Symptoms (N = 309)}
 
 \begin{tabular}{lllll}
 \toprule
